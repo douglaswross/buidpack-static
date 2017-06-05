@@ -51,6 +51,14 @@ http {
   <% end %>
 
     location / {
+      ####### HANDLE PREFLIGHTED REQUESTS #############
+      if ($request_method = OPTIONS ) {
+        add_header "Access-Control-Allow-Origin" https://creator.ionic.io;
+        add_header "Access-Control-Allow-Methods" "GET, POST, OPTIONS, HEAD";
+        add_header "Access-Control-Allow-Headers" "Authorization, Origin, X-Requested-With, Content-Type, Accept";
+      return 200;
+      }
+
       mruby_post_read_handler /app/bin/config/lib/ngx_mruby/headers.rb cache;
       mruby_set $fallback /app/bin/config/lib/ngx_mruby/routes_fallback.rb cache;
     <% if clean_urls %>
